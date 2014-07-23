@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item 
+        android:id="@+id/insertmn"
+        android:icon="@drawable/ic_action_new"/>
+    <item 
+        android:id="@+id/deletemn"
+        android:icon="@drawable/ic_action_remove"/>
+    <item 
+        android:id="@+id/updatemn"
+        android:icon="@drawable/ic_action_edit"/>
+    <item 
+        android:id="@+id/listmn"
+		android:icon="@drawable/ic_action_view_as_list"/>
+
+</menu>
