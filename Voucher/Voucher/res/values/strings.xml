@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">Barcode</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="wsgetproduct">http://117.6.131.222:8090/POS/WSERP/get_all_products.php</string>
-
-</resources>
