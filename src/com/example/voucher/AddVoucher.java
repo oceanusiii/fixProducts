@@ -3,6 +3,7 @@ package com.example.voucher;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.config.ConfigurationWS;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -23,7 +25,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class AddVoucher extends Activity {
+public class AddVoucher extends Activity 
+{
+
 	ProgressDialog progress;
 	// private static final String url =
 	// "http://117.6.131.222:8090/POS/WSERP/create_product.php";
@@ -41,13 +45,16 @@ public class AddVoucher extends Activity {
 	EditText status;
 	
 	EditText create_time;
-	EditText code_voucher;
+	EditText code_id;
+	EditText etBarcode;
 	String idmax="";
 	boolean checkCodeVoucher = false;
+	boolean checkBarcodeExist = false;
 	ArrayList<String> arrayCodeVoucher;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.addvoucher);
@@ -55,9 +62,10 @@ public class AddVoucher extends Activity {
 		product_name = (EditText) findViewById(R.id.addVcEdtPrdname);
 		quantity = (EditText) findViewById(R.id.addVcEdtQuan);
 		status = (EditText) findViewById(R.id.addVcEdtStat);
-		 
 		create_time = (EditText) findViewById(R.id.addVcEdtCretime);
-		code_voucher = (EditText) findViewById(R.id.addVcEdtCodevoucher);
+		code_id = (EditText) findViewById(R.id.addVcEdtCodevoucher);
+		etBarcode = (EditText) findViewById(R.id.addVcEdtPrdBarcode);
+		
 		arrayCodeVoucher = new ArrayList<String>();
 		
 		
@@ -67,7 +75,7 @@ public class AddVoucher extends Activity {
 		
 		
 		// Edit text change event
-		code_voucher.setOnFocusChangeListener(new OnFocusChangeListener() {
+		code_id.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 			@Override
 			public void onFocusChange(View arg0, boolean arg1) {
@@ -75,7 +83,7 @@ public class AddVoucher extends Activity {
 				
 				checkCodeVoucher = true;
 				
-				String a = code_voucher.getText().toString().trim();
+				String a = code_id.getText().toString().trim();
 				
 				Log.d("list", arrayCodeVoucher.toString() + arrayCodeVoucher.size());
 				
@@ -83,7 +91,7 @@ public class AddVoucher extends Activity {
 				{
 					if (arrayCodeVoucher.get(i).equals(a)) 
 					{
-						code_voucher.setError(" Code da bi trung hoac ban chua nhap ");
+						code_id.setError(" Code da bi trung hoac ban chua nhap ");
 						checkCodeVoucher = false;
 						break;
 					}
@@ -93,27 +101,58 @@ public class AddVoucher extends Activity {
 		
 		
 		// button save click event
-		save.setOnClickListener(new OnClickListener() {
+		save.setOnClickListener(new OnClickListener() 
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v) 
+			{
 				// TODO Auto-generated method stub
 				
 				// test
 				// set true for `checkCodeVoucher`
 				//
-				checkCodeVoucher = true;
+				//checkCodeVoucher = true;
+				
+				new WSCheckBarcodeExist(AddVoucher.this).execute(etBarcode.getText().toString());
 				
 				// check input value
-				if (checkCodeVoucher) 
+				if (checkBarcodeExist && 
+						!product_name.getText().toString().equals("") && 
+						!quantity.getText().toString().equals("") &&
+						!status.getText().toString().equals("") &&
+						!create_time.getText().toString().equals("") &&
+						!code_id.getText().toString().equals("") &&
+						!etBarcode.getText().toString().equals(""))
 				{
 					new WSAddvoucher(AddVoucher.this).execute();
 				} 
 				else
+				{
 					Toast.makeText(AddVoucher.this, " Moi nhap lai code voucher ", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}
+	
+	
+	
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		// TODO Auto-generated method stub
+		if(keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			Intent i = new Intent(AddVoucher.this, ListVoucher.class);
+			startActivity(i);
+		}
+		
+		
+		return super.onKeyDown(keyCode, event);
+	}
+
+	
+	
 	public String configidmax(String id) {
 
 		String convertid = id;
@@ -133,6 +172,8 @@ public class AddVoucher extends Activity {
 		return convertid;
 	}
 
+	
+	
 	// ----------------------------add voucher after check code voucher
 	// --------------
 	class WSAddvoucher extends AsyncTask<String, String, String> 
@@ -164,7 +205,8 @@ public class AddVoucher extends Activity {
 				String Strquantity = quantity.getText().toString();
 				String Strstatus = status.getText().toString();
 				String Strcreate_time = create_time.getText().toString();
-				String Strcode_voucher = code_voucher.getText().toString();
+				String Strcode_id = code_id.getText().toString();
+				String Strbarcode = etBarcode.getText().toString();
 
 //				String str = Strcreate_time;
 //
@@ -190,9 +232,9 @@ public class AddVoucher extends Activity {
 				json.put("quantity", Strquantity);
 				json.put("status", Strstatus);
 				//json.put("barcode", date);		// barcode
-				json.put("barcode", "");	
+				json.put("barcode", Strbarcode);	
 				json.put("create_time", Strcreate_time);
-				json.put("code_voucher", Strcode_voucher);
+				json.put("code_voucher", Strcode_id);
 				
 				
 				
@@ -205,6 +247,8 @@ public class AddVoucher extends Activity {
 			return null;
 		}
 
+		
+		
 		protected void onPostExecute(String result) 
 		{
 			// TODO Auto-generated method stub
@@ -213,6 +257,8 @@ public class AddVoucher extends Activity {
 			startActivity(intent);
 		}
 
+		
+		
 		@Override
 		protected void onPreExecute() 
 		{
@@ -230,7 +276,8 @@ public class AddVoucher extends Activity {
 	
 	// --------------------------Get codevoucher from server
 	// --------------------
-	class WSGetAllProduct extends AsyncTask<String, String, String> {
+	class WSGetAllProduct extends AsyncTask<String, String, String> 
+	{
 		
 		
 		private String TAG = "WSGetAllPhone";
@@ -238,18 +285,20 @@ public class AddVoucher extends Activity {
 		private Context context;
 		private ProgressDialog mProgress;
 
-		public WSGetAllProduct(Context mcontext) {
+		public WSGetAllProduct(Context mcontext) 
+		{
 			super();
 			this.context = mcontext;
 			mWS = new ConfigurationWS(mcontext);
 			mProgress = new ProgressDialog(mcontext);
 			
-	}
+		}
 
 		
 		
 		@Override
-		protected String doInBackground(String... arg0) {
+		protected String doInBackground(String... arg0) 
+		{
 			// TODO Auto-generated method stub
 			// oh! double `try` again
 			//try {
@@ -277,13 +326,90 @@ public class AddVoucher extends Activity {
 
 		
 		
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(String result) 
+		{
 			super.onPostExecute(result);
 			try {
 				
 				mProgress.dismiss();
 				
 			} catch (Exception e) { }
+		}
+
+		
+		
+		@Override
+		protected void onPreExecute() 
+		{
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			mProgress.setMessage("Loading data...");
+			mProgress.setCancelable(false);
+			mProgress.show();
+		}
+	}
+
+
+	
+	
+	// -------------------Getmax id ----------------
+	class WSGetMaxid extends AsyncTask<String, String, String> {
+		
+		
+		
+		private String TAG = "WSGetAllPhone";
+		private ConfigurationWS mWS;
+		private Context context;
+		private ProgressDialog mProgress;
+
+		
+		
+		public WSGetMaxid(Context mcontext) {
+			super();
+			this.context = mcontext;
+			mWS = new ConfigurationWS(mcontext);
+			mProgress = new ProgressDialog(mcontext);
+		}
+
+		
+		
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+			try 
+			{
+				try 
+				{
+					JSONObject json = new JSONObject();
+					JSONArray arrItem = new JSONArray();
+					arrItem = mWS.connectWSPut_Get_Data(urlidmax, json, "voucher");
+					if (arrItem != null) {
+						
+						JSONObject results = arrItem.getJSONObject(0);
+						idmax = results.getString("id") + "";
+						
+					}
+				} 
+				catch (Exception e) 
+				{
+					Log.i(TAG, "ERROR : " + e.getMessage());
+				}
+			} 
+			catch (Exception e) { }
+			
+			
+			return null;
+		}
+
+		
+		
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			try 
+			{
+				mProgress.dismiss();
+			} 
+			catch (Exception e) { }
 		}
 
 		
@@ -298,60 +424,85 @@ public class AddVoucher extends Activity {
 		}
 	}
 
-	
-	
-	// -------------------Getmax id ----------------
-	class WSGetMaxid extends AsyncTask<String, String, String> {
-		
-		private String TAG = "WSGetAllPhone";
-		private ConfigurationWS mWS;
-		private Context context;
-		private ProgressDialog mProgress;
 
-		public WSGetMaxid(Context mcontext) {
-			super();
-			this.context = mcontext;
-			mWS = new ConfigurationWS(mcontext);
-			mProgress = new ProgressDialog(mcontext);
+	
+	
+	//
+	class WSCheckBarcodeExist extends AsyncTask<String, String, String>
+	{
+		
+		private ConfigurationWS ws;
+		
+		public WSCheckBarcodeExist(Context c)
+		{
+			ws = new ConfigurationWS(c);
 		}
+		
 
 		@Override
-		protected String doInBackground(String... arg0) {
+		protected String doInBackground(String... params)
+		{
 			// TODO Auto-generated method stub
-			try {
-				try {
+			
+			String id = params[0];
+			
+			Log.e("checkBarcodeExist", id);
+			
+			if(!id.equals(""))
+			{
+				try
+				{
 					JSONObject json = new JSONObject();
-					JSONArray arrItem = new JSONArray();
-					arrItem = mWS.connectWSPut_Get_Data(urlidmax, json, "voucher");
-					if (arrItem != null) {
-						
-						JSONObject results = arrItem.getJSONObject(0);
-						idmax = results.getString("id") + "";
-						
+					json.put("_id", id);
+					String u = "http://117.6.131.222:6789/erpws/get_all_products_by_barcode.php";
+					JSONArray jarr = ws.connectWSPut_Get_Data(u, json, "voucher");
+					
+					if(jarr.length() <= 0)
+					{
+						checkBarcodeExist = true;
 					}
-				} catch (Exception e) {
-					Log.i(TAG, "ERROR : " + e.getMessage());
+					else
+					{
+						checkBarcodeExist = false;
+					}
 				}
-			} catch (Exception e) {
+				catch (JSONException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			
 			return null;
 		}
 
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			try {
-				mProgress.dismiss();
-			} catch (Exception e) {
-			}
-		}
-
+		
+		
 		@Override
-		protected void onPreExecute() {
+		protected void onPreExecute()
+		{
 			// TODO Auto-generated method stub
 			super.onPreExecute();
-			mProgress.setMessage("Loading data...");
-			mProgress.setCancelable(false);
-			mProgress.show();
 		}
+		
+		
+
+		@Override
+		protected void onPostExecute(String result)
+		{
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+		}
+		
+		
+
+		@Override
+		protected void onProgressUpdate(String... values)
+		{
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+		}
+		
+		
 	}
 }

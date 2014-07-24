@@ -74,7 +74,8 @@ public class DetailProduct extends Activity {
 
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail);
@@ -153,9 +154,8 @@ public class DetailProduct extends Activity {
 
 	
 	
-	class delete extends AsyncTask<String, String, String> {
-
-		
+	class delete extends AsyncTask<String, String, String> 
+	{
 		// 2
 		@Override
 		protected String doInBackground(String... arg0) {

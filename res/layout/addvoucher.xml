@@ -53,6 +53,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
+            
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Barcode  : "
+                    android:textColor="#006600"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/addVcEdtPrdBarcode"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text=""
+                    android:textColor="#006600" />
+            </TableRow>
+            
+            
             <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,7 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Code voucher  : "
+                    android:text="Code id  : "
                     android:textColor="#006600"
                     android:textStyle="bold" />
 

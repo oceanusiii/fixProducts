@@ -25,7 +25,8 @@ import com.example.config.ConfigurationWS;
 import com.exemple.model.Product;
 import com.exemple.model.Voucher;
 
-public class BareCodeCT extends Activity {
+public class BareCodeCT extends Activity 
+{
 	
 	
 	private BluetoothAdapter mBluetoothAdapter = null;
@@ -51,7 +52,8 @@ public class BareCodeCT extends Activity {
 	
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{
 		// TODO Auto-generated method stub
 		
 		if (keyCode == KeyEvent.KEYCODE_BACK)
@@ -63,7 +65,8 @@ public class BareCodeCT extends Activity {
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.barcode);
 		
@@ -82,25 +85,24 @@ public class BareCodeCT extends Activity {
 		p = new Product();
 
 		
-		// test on VirtualDevice
+		// when test on VirtualDevice
 		// disable checking bluetooth
-		
-		
-//		if (mBluetoothAdapter == null) {
-//			
-//			Toast.makeText(this, "khong ho tro barecode", Toast.LENGTH_LONG).show();
-//			finish();
-//			return;
-//		}
+		if (mBluetoothAdapter == null) {
+			
+			Toast.makeText(this, "khong ho tro barecode", Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
 
 	}
 
-	private TextView.OnEditorActionListener mWriteListener = new TextView.OnEditorActionListener() {
+	private TextView.OnEditorActionListener mWriteListener = new TextView.OnEditorActionListener() 
+	{
 		
 		// event enter key
-		public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-			
-			
+		public boolean onEditorAction(TextView view, int actionId, KeyEvent event) 
+		{
+
 			// If the action is a key-up event on the return key, send the
 			// message
 			if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_UP) 
@@ -117,6 +119,12 @@ public class BareCodeCT extends Activity {
 				{
 					
 					Toast.makeText(BareCodeCT.this, message, Toast.LENGTH_LONG).show();
+					// reset values of Product `p`
+					p.setProduct_Name("Unkown");
+					p.setQuantity("0");
+					p.setStatus("0");
+					p.setBarcode("###########");
+					p.setCreate_date("####-##-##");
 					// ------- get data ----------------------
 					new WSGetProductServer(BareCodeCT.this, message).execute();
 				}
@@ -155,12 +163,14 @@ public class BareCodeCT extends Activity {
 
 		// --------processing------------------------------//
 		@Override
-		protected void onProgressUpdate(Void... values) {
+		protected void onProgressUpdate(Void... values) 
+		{
 			super.onProgressUpdate(values);
 		}
 
 		@Override
-		protected void onPreExecute() {
+		protected void onPreExecute() 
+		{
 			// TODO Auto-generated method
 			super.onPreExecute();
 			mProgress.setMessage("Loading data...");
@@ -169,7 +179,8 @@ public class BareCodeCT extends Activity {
 		}
 
 		@Override
-		protected Void doInBackground(Void... arg0) {
+		protected Void doInBackground(Void... arg0) 
+		{
 			
 			try {
 				
@@ -205,12 +216,6 @@ public class BareCodeCT extends Activity {
 						
 						JSONObject results = arrItem.getJSONObject(i);
 						
-//						vc.setProduct_name(results.getString("product_name"));
-//						vc.setQuantity(results.getString("quantity"));
-//						vc.setStatus(results.getString("status") + "");
-//						vc.setBarcode(results.getString("barcode"));
-//						vc.setCreate_time(results.getString("create_date"));
-						
 						p.setProduct_Name(results.getString("product_name"));
 						p.setQuantity(results.getString("quantity"));
 						p.setStatus(results.getString("status") + "");
@@ -233,12 +238,6 @@ public class BareCodeCT extends Activity {
 			try 
 			{
 				// ------------set Text here---------------------------
-//				mainEdtBar.setText(vc.getBarcode());
-//				mainEdtSta.setText(vc.getStatus());
-//				mainEdtQuan.setText(vc.getQuantity());
-//				mainEdtPro.setText(vc.getProduct_name());
-//				mainEdtCre.setText(vc.getCreate_time());
-				
 				mainEdtBar.setText(p.getBarcode());
 				mainEdtSta.setText(p.getStatus());
 				mainEdtQuan.setText(p.getQuantity());
