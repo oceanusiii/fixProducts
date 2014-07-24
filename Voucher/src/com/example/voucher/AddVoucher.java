@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -31,9 +32,9 @@ public class AddVoucher extends Activity {
 //	private static final String urlgetall = "http://117.6.131.222:8090/POS/WSERP/get_all_products.php";
 //	private static final String urlidmax = "http://117.6.131.222:8090/POS/WSERP/get_maxid.php";
 
-	private static final String urladd = "http://117.6.131.222:6789/pos/SERPws/wserp/create_product.php";
-	private static final String urlgetall = "http://117.6.131.222:6789/pos/SERPws/wserp/get_all_products.php";
-	private static final String urlidmax = "http://117.6.131.222:6789/pos/SERPws/wserp/get_maxid.php";
+	private static final String urladd = "http://117.6.131.222:6789/erpws/create_product.php";
+	private static final String urlgetall = "http://117.6.131.222:6789/erpws/get_all_products.php";
+	private static final String urlidmax = "http://117.6.131.222:6789/erpws/get_maxid.php";
 
 	
 	EditText product_name;
@@ -154,11 +155,11 @@ public class AddVoucher extends Activity {
 				JSONObject json = new JSONObject();
 				
 				
-//				String Strproduct_name = product_name.getText().toString();
-//				String Strquantity = quantity.getText().toString();
-//				String Strstatus = status.getText().toString();
-//				String Strcreate_time = create_time.getText().toString();
-//				String Strcode_voucher = code_voucher.getText().toString();
+				String Strproduct_name = product_name.getText().toString();
+				String Strquantity = quantity.getText().toString();
+				String Strstatus = status.getText().toString();
+				String Strcreate_time = create_time.getText().toString();
+				String Strcode_voucher = code_voucher.getText().toString();
 
 //				String str = Strcreate_time;
 //
@@ -180,22 +181,22 @@ public class AddVoucher extends Activity {
 				// lines code below is create jsonObject
 				// with data
 				// i will create fake data here :>
-				json.put("product_name", "truong");
-				json.put("quantity", "1");
-				json.put("status", "1");
-				json.put("barcode", "123456789099");
-				json.put("create_time", "2014-07-07 00:00");
+//				json.put("product_name", "truong");
+//				json.put("quantity", "1");
+//				json.put("status", "1");
+//				json.put("barcode", "123456789099");
+//				json.put("create_time", "2014-07-07 00:00");
 				//json.put("code_voucher", "1111");
 				
 				
 				
 				
-//				json.put("product_name", Strproduct_name);
-//				json.put("quantity", Strquantity);
-//				json.put("status", Strstatus);
-//				json.put("barcode", date);
-//				json.put("create_time", Strcreate_time);
-//				json.put("code_voucher", Strcode_voucher);
+				json.put("product_name", Strproduct_name);
+				json.put("quantity", Strquantity);
+				json.put("status", Strstatus);
+				json.put("barcode", Strcode_voucher);
+				json.put("create_time", Strcreate_time);
+				json.put("code_voucher", Strcode_voucher);
 				
 				
 				
@@ -350,5 +351,14 @@ public class AddVoucher extends Activity {
 			mProgress.setCancelable(false);
 			mProgress.show();
 		}
+	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	        Log.i("MainActivity", "Back button pressed, exiting..");
+	        Intent i = new Intent(AddVoucher.this,MainVoucher.value);
+	        startActivity(i);
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 }

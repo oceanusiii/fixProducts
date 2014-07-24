@@ -8,6 +8,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainVoucher extends Activity {
+	
+//	public static int a;
+	public static Class<?> value;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

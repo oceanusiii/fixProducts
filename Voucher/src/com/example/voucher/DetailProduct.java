@@ -8,13 +8,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.config.ConfigurationWS;
-import com.example.voucher.DetailVoucher.delete;
 import com.exemple.model.Product;
 
 public class DetailProduct extends Activity {
@@ -28,13 +28,12 @@ public class DetailProduct extends Activity {
 	TextView barcode;
 	TextView date;
 	TextView code_id;
+	ImageButton home;
 	ConfigurationWS WSdetail = new ConfigurationWS(DetailProduct.this);
 	// private static final String url =
 	// "http://117.6.131.222:8090/POS/WSERP/delete_product.php";
 	//private static final String url = "http://117.6.131.222:8090/POS/WSERP/delete_product.php";
 	private static final String url = "http://117.6.131.222:6789/erpws/delete_product.php";
-	
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +43,16 @@ public class DetailProduct extends Activity {
 		
 		// get data from father activity
 		Bundle bundle = getIntent().getExtras();
+		if(MainVoucher.value==ListVoucher.class)
+		{
 		product = bundle.getParcelable("product");
-		
+		}
+		else {
+			product = bundle.getParcelable("product");
+		}
 		// get views from layout
+		
+		home = (ImageButton) findViewById(R.id.home);
 		product_name = (TextView) findViewById(R.id.productnamedetail);
 		quantity = (TextView) findViewById(R.id.quantitydetail);
 		status = (TextView) findViewById(R.id.statusdetail);
@@ -89,11 +95,24 @@ public class DetailProduct extends Activity {
 				Intent intent = new Intent(DetailProduct.this, EditVoucher.class);
 				
 				// send data to new activity
+				MainVoucher.value = DetailProduct.class;
 				Bundle bun = new Bundle();
 				bun.putParcelable("detailvoucher", product);
 				intent.putExtras(bun);
 				// open new activity - <edit voucher activity>
 				startActivity(intent);
+			}
+		});
+		
+		
+		////come back home
+		home.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(DetailProduct.this,MainVoucher.class);
+				startActivity(i);
 			}
 		});
 	}
@@ -143,5 +162,22 @@ public class DetailProduct extends Activity {
 			progress.show();
 		}
 
+	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	        Log.i("MainActivity", "Back button pressed, exiting..");
+	        Intent i = new Intent();
+	        if(MainVoucher.value!=DetailProduct.class){
+	        i = new Intent(DetailProduct.this,MainVoucher.value);
+	        }
+	        else {
+	        	i = new Intent(DetailProduct.this,ListVoucher.class);
+			}
+	        startActivity(i);
+	        
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 }

@@ -1,8 +1,10 @@
 package com.example.voucher;
 
 import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -20,23 +22,30 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.example.config.ConfigurationWS;
 import com.exemple.model.Product;
 import com.exemple.model.Voucher;
 
 public class ListVoucher extends Activity {
 	
+	private int check;
+	ConfigurationWS WSdetail = new ConfigurationWS(ListVoucher.this);
 	
 	ArrayList<Product> myArrayList = new ArrayList<Product>();
 	ListView myListView;
 	CustomAdapter myCustomAdapter;
 	Bundle bundlerefrest;
+	ProgressDialog progress;
 	// private static final String url =
 	// "http://192.168.1.101:81/WSERP/get_all_products.php";
 	// private static final String url =
-	// "http://117.6.131.222:8090/POS/WSERP/get_all_products.php";
+	// "http://117.6.131.222:8090/POS/WSERP/delete_product.php";
+	private static final String url_delete = "http://117.6.131.222:6789/erpws/delete_product.php";
 	private static final String url = "http://117.6.131.222:6789/erpws/get_all_products.php";
 
 	@Override
@@ -50,10 +59,34 @@ public class ListVoucher extends Activity {
 		myCustomAdapter = new CustomAdapter(getApplicationContext(), 1, myArrayList);
 		myListView.setAdapter(myCustomAdapter);
 		
+		
 		ImageButton myimageButton = (ImageButton) findViewById(R.id.MainIbAdd);
 		ImageButton refreshButton = (ImageButton) findViewById(R.id.MainIbRefresh);
-		// new Getall().execute();
+		ImageButton delete = (ImageButton) findViewById(R.id.delete);
 		
+		// delete product
+		delete.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				for (int i = 0; i<myListView.getChildCount(); ++i) {
+					
+					View row = myListView.getChildAt(i);
+					CheckBox cb = (CheckBox) row.findViewById(R.id.cb);
+					Log.e("test check box",cb.isChecked()+"");
+					if(cb.isChecked())
+					{
+						TextView id = (TextView) row.findViewById(R.id.id);
+						check =Integer.parseInt((String) id.getText());
+						Log.e("id duoc chon",id.getText()+"");
+						new delete().execute();
+						myArrayList.clear();
+						new WSGetAllProduct(ListVoucher.this).execute();
+					}
+				}
+			}
+		});
 		// button REFRESH onClick
 		refreshButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -72,6 +105,7 @@ public class ListVoucher extends Activity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(ListVoucher.this, AddVoucher.class);
+				MainVoucher.value = ListVoucher.class;
 				startActivity(intent);
 			}
 		});
@@ -82,7 +116,7 @@ public class ListVoucher extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				// TODO Auto-generated method stub
-				
+//				MainVoucher.a=1;
 				// get product selected
 				Product product = (Product) myListView.getItemAtPosition(arg2);
 				//Log.e("List all product", product.getProduct_Name());
@@ -100,6 +134,7 @@ public class ListVoucher extends Activity {
 				// get bundle data: bundle = intent.getBundleExtra("name_bundle")
 				// get data: datatype data = bundle.getDatatype(key)
 				//
+				MainVoucher.value = ListVoucher.class;
 				Bundle bundle = new Bundle();
 				//Log.d("date", product.getCreate_date());
 				bundle.putParcelable("product", product);
@@ -205,5 +240,39 @@ public class ListVoucher extends Activity {
 			mProgress.setCancelable(false);
 			mProgress.show();
 		}
+	}
+public class delete extends AsyncTask<String, String, String> {
+
+		
+		// 2
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+			try {
+				JSONObject json = new JSONObject();
+				//json.put("id", voucher.getId());
+				json.put("_id", check);
+				WSdetail.connectWSPut_Get_Data(url_delete, json, "voucher");
+				Log.d("delet", "delte");
+				progress.dismiss();
+			} 
+			catch (Exception e) { }
+			
+			return null;
+		}
+
+		// 3
+		// 1
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			progress = new ProgressDialog(ListVoucher.this);
+			progress.setMessage("Loading products. Please wait...");
+			progress.setIndeterminate(false);
+			progress.setCancelable(false);
+			progress.show();
+		}
+
 	}
 }

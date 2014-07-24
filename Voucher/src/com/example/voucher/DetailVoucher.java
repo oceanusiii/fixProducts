@@ -127,7 +127,7 @@ public class DetailVoucher extends Activity {
 				//json.put("id", voucher.getId());
 				json.put("id", product.getId());
 				WSdetail.connectWSPut_Get_Data(url, json, "voucher");
-				Log.d("delet", "delte");
+				Log.d("delete", "delete");
 			} 
 			catch (Exception e) { }
 			
@@ -141,9 +141,11 @@ public class DetailVoucher extends Activity {
 			// TODO Auto-generated method stub
 			progress.dismiss();
 			super.onPostExecute(result);
-			Intent intent = new Intent(DetailVoucher.this, ListVoucher.class);
-			startActivity(intent);
+//			Intent intent = new Intent(DetailVoucher.this, lissst);
+//			startActivity(intent);
 			finish();
+			
+			
 		}
 		
 		

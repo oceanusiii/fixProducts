@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class EditVoucher extends Activity {
 	EditText status;
 	EditText barcode;
 	EditText code_voucher;
+	ImageButton home;
 	ProgressDialog progress;
 	// private static final String url =
 	// "http://117.6.131.222:8090/POS/WSERP/update.php";
@@ -45,7 +47,7 @@ public class EditVoucher extends Activity {
 		//voucher = bundle.getParcelable("detailvoucher");
 		product = bundle.getParcelable("detailvoucher");
 
-
+		home= (ImageButton) findViewById(R.id.home);
 		product_name = (EditText) findViewById(R.id.editname);
 		quantity = (EditText) findViewById(R.id.editquantity);
 		status = (EditText) findViewById(R.id.editstatus);
@@ -78,7 +80,17 @@ public class EditVoucher extends Activity {
 
 			}
 		});
-
+		
+		///come back home
+		home.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(EditVoucher.this,MainVoucher.class);
+				startActivity(i);
+			}
+		});
 	}
 
 	
@@ -145,5 +157,16 @@ public class EditVoucher extends Activity {
 		}
 
 	}
-
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	        Log.i("MainActivity", "Back button pressed, exiting..");
+	        Bundle bun= new Bundle();
+	        bun.putParcelable("product",product);
+	        Intent i = new Intent(this,MainVoucher.value);
+	        i.putExtras(bun);
+	        startActivity(i);
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
 }

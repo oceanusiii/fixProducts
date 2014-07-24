@@ -16,6 +16,37 @@ public class Product implements Parcelable {
 	private String status;
 	private String barcode;
 	private String create_date;
+	private Boolean checkbox;
+
+	
+	
+	
+	public Product(String id, String code_id, String product_name,
+			String group_id, String type_id, String accessory, String note,
+			String quantity, String status, String barcode, String create_date,
+			Boolean checkbox) {
+		super();
+		this.id = id;
+		this.code_id = code_id;
+		this.product_name = product_name;
+		this.group_id = group_id;
+		this.type_id = type_id;
+		this.accessory = accessory;
+		this.note = note;
+		this.quantity = quantity;
+		this.status = status;
+		this.barcode = barcode;
+		this.create_date = create_date;
+		setCheckbox(false);
+	}
+
+	public Boolean getCheckbox() {
+		return checkbox;
+	}
+
+	public void setCheckbox(Boolean checkbox) {
+		this.checkbox = checkbox;
+	}
 
 	public String getCreate_date() {
 		

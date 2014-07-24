@@ -11,7 +11,7 @@
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:weightSum="6" >
+        android:weightSum="7" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,6 +39,14 @@
             android:layout_weight="1"
             android:background="@drawable/layoutlist"
             android:src="@drawable/plus" />
+         <ImageButton
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/layoutlist"
+            android:src="@drawable/close_delete" />
     </LinearLayout>
 
     <ListView
