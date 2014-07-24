@@ -7,7 +7,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.StaticLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -16,6 +18,8 @@ import android.widget.TextView;
 import com.example.config.ConfigurationWS;
 import com.example.voucher.DetailVoucher.delete;
 import com.exemple.model.Product;
+
+
 
 public class DetailProduct extends Activity {
 	
@@ -36,6 +40,39 @@ public class DetailProduct extends Activity {
 	
 	
 	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+
+
+		//Intent i = new Intent(DetailProduct.this, ListVoucher.class);
+		//startActivity(i);
+		
+		//finishActivity(0);
+	}
+
+
+	
+	
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			Intent i = new Intent(DetailProduct.this, ListVoucher.class);
+			startActivity(i);
+		}
+		
+		return super.onKeyDown(keyCode, event);
+	}
+
+
+
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -65,6 +102,8 @@ public class DetailProduct extends Activity {
 		
 		ImageButton update = (ImageButton) findViewById(R.id.sua);
 		ImageButton xoa = (ImageButton) findViewById(R.id.xoa);
+		ImageButton btnBack = (ImageButton) findViewById(R.id.home);
+		
 		
 		
 		// button DELETE onClick
@@ -77,6 +116,7 @@ public class DetailProduct extends Activity {
 				new delete().execute();
 			}
 		});
+		
 		
 		
 		// button UPDATE onClick
@@ -94,6 +134,19 @@ public class DetailProduct extends Activity {
 				intent.putExtras(bun);
 				// open new activity - <edit voucher activity>
 				startActivity(intent);
+			}
+		});
+		
+		
+		
+		// Button BACK onClick
+		btnBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				finish();
 			}
 		});
 	}

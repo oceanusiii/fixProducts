@@ -20,8 +20,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.example.config.ConfigurationWS;
 import com.exemple.model.Product;
 import com.exemple.model.Voucher;
@@ -38,21 +41,30 @@ public class ListVoucher extends Activity {
 	// private static final String url =
 	// "http://117.6.131.222:8090/POS/WSERP/get_all_products.php";
 	private static final String url = "http://117.6.131.222:6789/erpws/get_all_products.php";
+	private static final String del_url = "http://117.6.131.222:6789/erpws/delete_product.php";
 
+	
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		
 		super.onCreate(savedInstanceState);
 		bundlerefrest = savedInstanceState;
 		setContentView(R.layout.listvoucher);
 		/*--------------------policy for connect to ws-------------*/
 		final ListView myListView = (ListView) findViewById(R.id.MainListvoucher);
-		myCustomAdapter = new CustomAdapter(getApplicationContext(), 1, myArrayList);
+		myCustomAdapter = new CustomAdapter(ListVoucher.this, R.layout.listvoucher, myArrayList);
 		myListView.setAdapter(myCustomAdapter);
 		
-		ImageButton myimageButton = (ImageButton) findViewById(R.id.MainIbAdd);
+		
+		ImageButton addButton = (ImageButton) findViewById(R.id.MainIbAdd);
 		ImageButton refreshButton = (ImageButton) findViewById(R.id.MainIbRefresh);
+		ImageButton delButton = (ImageButton) findViewById(R.id.MainDelete);
+		ImageButton backButton = (ImageButton) findViewById(R.id.listvoucher_btnBack);
 		// new Getall().execute();
+		
+		
 		
 		// button REFRESH onClick
 		refreshButton.setOnClickListener(new OnClickListener() {
@@ -67,7 +79,7 @@ public class ListVoucher extends Activity {
 		
 		
 		// button ADD onClick
-		myimageButton.setOnClickListener(new OnClickListener() {
+		addButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
@@ -75,6 +87,52 @@ public class ListVoucher extends Activity {
 				startActivity(intent);
 			}
 		});
+		
+		
+		
+		// button DEL onClick
+		delButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				for (int i=myListView.getChildCount() - 1; i>=0; --i)
+				{
+					View row = myListView.getChildAt(i);
+					
+					CheckBox cb = (CheckBox) row.findViewById(R.id.cb_customvoucher1);
+					
+					Log.e("test check box ", cb.isChecked() + "");
+					
+					if (cb.isChecked())
+					{
+						TextView tv_tmp = (TextView) row.findViewById(R.id.tv_customvoucher1);
+						
+						//Log.e("test show item id", tv_tmp.getText().toString());
+						
+						new DeleteProduct(tv_tmp.getText().toString()).execute();
+					}
+				}
+				
+			}
+		});
+		
+		
+		
+		// Button home onClick
+		backButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+				// close this Activity
+				// back to previous Activity
+				finish();
+			}
+		});
+		
 		
 		
 		// select item in list view
@@ -106,11 +164,14 @@ public class ListVoucher extends Activity {
 				intent.putExtras(bundle);
 				// open new activity
 				// show detail product
-				startActivity(intent);
+				//startActivity(intent);
+				startActivityForResult(intent, 1);
 			}
 		});
 	}
 
+	
+	
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		
@@ -122,10 +183,17 @@ public class ListVoucher extends Activity {
 	}
 	
 	
-	///
-	// this AsyncTask do convert
-	// jsonObject to array
+	
+	
+	/**
+	 *  this AsyncTask do convert
+	 *  array json_object to array `Product`
+	 * @author FDM17
+	 *
+	 */
 	class WSGetAllProduct extends AsyncTask<String, String, String> {
+		
+		
 		private String TAG = "WSGetAllPhone";
 		private ConfigurationWS mWS;
 		private Context context;
@@ -206,4 +274,81 @@ public class ListVoucher extends Activity {
 			mProgress.show();
 		}
 	}
+	
+	
+	
+	
+	/**
+	 * Delete Product by id
+	 * @author FDM17
+	 *
+	 */
+	class DeleteProduct extends AsyncTask<String, String, String> {
+
+		
+		private String id;
+		private ConfigurationWS myWS;
+		private ProgressDialog progress;
+		
+		
+		public DeleteProduct(String id)
+		{
+			this.id = id;
+			myWS = new ConfigurationWS(ListVoucher.this);
+		}
+		
+		
+		// 2
+		@Override
+		protected String doInBackground(String... arg0) {
+			// TODO Auto-generated method stub
+			try 
+			{
+				JSONObject json = new JSONObject();
+
+				json.put("_id", this.id);
+				
+				myWS.connectWSPut_Get_Data(del_url, json, "voucher");
+				
+				Log.d("delet", "delte");
+			} 
+			catch (Exception e) { }
+			
+			return null;
+		}
+
+		
+		// 3
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			progress.dismiss();
+			super.onPostExecute(result);
+			//Intent intent = new Intent(ListVoucher.this, ListVoucher.class);
+			//startActivity(intent);
+			
+			// = button Refresh onClick
+			myArrayList.clear();
+			new WSGetAllProduct(ListVoucher.this).execute();
+			
+			//finish();
+		}
+		
+		
+		// 1
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			
+			progress = new ProgressDialog(ListVoucher.this);
+			progress.setMessage("Loading products. Please wait...");
+			progress.setIndeterminate(false);
+			progress.setCancelable(false);
+			progress.show();
+		}
+
+	}
+
+
 }

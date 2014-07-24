@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +47,20 @@ public class BareCodeCT extends Activity {
 	private TextView mainEdtCre;
 	//public Voucher vc;
 	public Product p;
+	
+	
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			finish();
+		}
+		
+		return super.onKeyDown(keyCode, event);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +103,8 @@ public class BareCodeCT extends Activity {
 			
 			// If the action is a key-up event on the return key, send the
 			// message
-			//if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_UP) 
-			//{
+			if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_UP) 
+			{
 				
 				message = view.getText().toString();
 				
@@ -106,7 +121,7 @@ public class BareCodeCT extends Activity {
 					new WSGetProductServer(BareCodeCT.this, message).execute();
 				}
 				
-			//}
+			}
 				
 			return true;
 		}

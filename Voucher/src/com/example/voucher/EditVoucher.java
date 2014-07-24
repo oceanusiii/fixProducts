@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -33,9 +34,25 @@ public class EditVoucher extends Activity {
 	//Voucher voucher;
 	Product product;
 	ConfigurationWS WSedit = new ConfigurationWS(EditVoucher.this);
+	
+	
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{
+			Intent i = new Intent(EditVoucher.this, ListVoucher.class);
+			startActivity(i);
+		}
+		
+		return super.onKeyDown(keyCode, event);
+	}
 
-	
-	
+
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub

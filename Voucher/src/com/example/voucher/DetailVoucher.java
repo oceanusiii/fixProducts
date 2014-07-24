@@ -33,7 +33,7 @@ public class DetailVoucher extends Activity {
 	TextView status;
 	TextView barcode;
 	TextView date;
-	TextView code_voucher;
+	TextView code_id;
 	ConfigurationWS WSdetail = new ConfigurationWS(DetailVoucher.this);
 	// private static final String url =
 	// "http://117.6.131.222:8090/POS/WSERP/delete_product.php";
@@ -59,7 +59,7 @@ public class DetailVoucher extends Activity {
 		status = (TextView) findViewById(R.id.statusdetail);
 		barcode = (TextView) findViewById(R.id.barcodedetail);
 		date = (TextView) findViewById(R.id.date);
-		code_voucher=(TextView) findViewById(R.id.codevoucherdetail);
+		code_id=(TextView) findViewById(R.id.codevoucherdetail);
 		
 		// LOG
 		Log.d("dohai", product.getCode_id());
@@ -74,7 +74,7 @@ public class DetailVoucher extends Activity {
 		quantity.setText(product.getQuantity());
 		status.setText(product.getStatus());
 		barcode.setText(product.getBarcode());
-		code_voucher.setText(product.getCode_id());		
+		code_id.setText(product.getCode_id());		
 		//Log.d("date", voucher.getCreate_time());
 		Log.d("date", product.getCreate_date());
 		date.setText(product.getCreate_date());

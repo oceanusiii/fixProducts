@@ -1,22 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="30dip"
     android:background="@drawable/mborder_green"
+    android:weightSum="10"
     android:orientation="horizontal" >
 
+    <TextView
+        android:id="@+id/tv_customvoucher1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="0" />
+
     <ImageView
-        android:layout_width="42dp"
-        android:layout_height="41dp"
+        android:id="@+id/iv_customvoucher1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:src="@drawable/producticon" 
-        android:layout_margin="10dp"/>
-	<TextView 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="Go vao day "
-	    android:id="@+id/customvoucher"
-	    android:paddingTop="20dp"
+		android:layout_weight="3"
+		/>
+	<TextView
+	    android:id="@+id/tv_customvoucher2"
+	    android:layout_width="0dp"
+	    android:layout_height="match_parent"
+	    android:layout_weight="5"
+	    android:text="product's name"
 	    android:textColor="#1F88DF"
-	    android:paddingLeft="10dp"
+	    android:gravity="center"
 	    />
+
+	<CheckBox
+	    android:id="@+id/cb_customvoucher1"
+	    android:layout_width="0dp"
+	    android:layout_height="match_parent"
+	    android:checked="false"
+	    android:focusable="false"
+	    android:focusableInTouchMode="false"
+	    android:layout_weight="1"
+	    android:text="" />
+
 </LinearLayout>

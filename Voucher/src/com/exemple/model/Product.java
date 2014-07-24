@@ -16,6 +16,7 @@ public class Product implements Parcelable {
 	private String status;
 	private String barcode;
 	private String create_date;
+	private boolean isChecked;
 
 	public String getCreate_date() {
 		
@@ -89,6 +90,17 @@ public class Product implements Parcelable {
 	public void setType_id(String type_id) {
 		this.type_id = type_id;
 	}
+	
+	public boolean isChecked()
+	{
+		return isChecked;
+	}
+	
+	public void setChecked(boolean chk)
+	{
+		isChecked = chk;
+	}
+			
 
 	public String getAccessory() {
 		return accessory;
@@ -118,6 +130,7 @@ public class Product implements Parcelable {
 		this.type_id = type_id;
 		this.accessory = accessory;
 		this.note = note;
+		this.isChecked = false;
 	}
 	
 	

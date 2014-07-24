@@ -31,7 +31,7 @@ public class AddVoucher extends Activity {
 //	private static final String urlgetall = "http://117.6.131.222:8090/POS/WSERP/get_all_products.php";
 //	private static final String urlidmax = "http://117.6.131.222:8090/POS/WSERP/get_maxid.php";
 
-	private static final String urladd = "http://117.6.131.222:6789/pos/SERPws/wserp/create_product.php";
+	private static final String urladd = "http://117.6.131.222:6789/erpws/create_product.php";
 	private static final String urlgetall = "http://117.6.131.222:6789/pos/SERPws/wserp/get_all_products.php";
 	private static final String urlidmax = "http://117.6.131.222:6789/pos/SERPws/wserp/get_maxid.php";
 
@@ -79,8 +79,10 @@ public class AddVoucher extends Activity {
 				
 				Log.d("list", arrayCodeVoucher.toString() + arrayCodeVoucher.size());
 				
-				for (int i = 0; i < arrayCodeVoucher.size() - 1; i++) {
-					if (arrayCodeVoucher.get(i).equals(a)) {
+				for (int i = 0; i < arrayCodeVoucher.size() - 1; i++) 
+				{
+					if (arrayCodeVoucher.get(i).equals(a)) 
+					{
 						code_voucher.setError(" Code da bi trung hoac ban chua nhap ");
 						checkCodeVoucher = false;
 						break;
@@ -102,9 +104,11 @@ public class AddVoucher extends Activity {
 				checkCodeVoucher = true;
 				
 				// check input value
-				if (checkCodeVoucher) {
+				if (checkCodeVoucher) 
+				{
 					new WSAddvoucher(AddVoucher.this).execute();
-				} else
+				} 
+				else
 					Toast.makeText(AddVoucher.this, " Moi nhap lai code voucher ", Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -131,7 +135,8 @@ public class AddVoucher extends Activity {
 
 	// ----------------------------add voucher after check code voucher
 	// --------------
-	class WSAddvoucher extends AsyncTask<String, String, String> {
+	class WSAddvoucher extends AsyncTask<String, String, String> 
+	{
 		
 		private String TAG = "WSGetAllPhone";
 		private ConfigurationWS mWS;
@@ -146,7 +151,8 @@ public class AddVoucher extends Activity {
 		}
 
 		@Override
-		protected String doInBackground(String... arg0) {
+		protected String doInBackground(String... arg0) 
+		{
 			// TODO Auto-generated method stub
 			
 			try {
@@ -154,11 +160,11 @@ public class AddVoucher extends Activity {
 				JSONObject json = new JSONObject();
 				
 				
-//				String Strproduct_name = product_name.getText().toString();
-//				String Strquantity = quantity.getText().toString();
-//				String Strstatus = status.getText().toString();
-//				String Strcreate_time = create_time.getText().toString();
-//				String Strcode_voucher = code_voucher.getText().toString();
+				String Strproduct_name = product_name.getText().toString();
+				String Strquantity = quantity.getText().toString();
+				String Strstatus = status.getText().toString();
+				String Strcreate_time = create_time.getText().toString();
+				String Strcode_voucher = code_voucher.getText().toString();
 
 //				String str = Strcreate_time;
 //
@@ -177,25 +183,16 @@ public class AddVoucher extends Activity {
 //				String id = configidmax(idmax);
 //				date = date + id;
 				
-				// lines code below is create jsonObject
-				// with data
-				// i will create fake data here :>
-				json.put("product_name", "truong");
-				json.put("quantity", "1");
-				json.put("status", "1");
-				json.put("barcode", "123456789099");
-				json.put("create_time", "2014-07-07 00:00");
-				//json.put("code_voucher", "1111");
 				
 				
 				
-				
-//				json.put("product_name", Strproduct_name);
-//				json.put("quantity", Strquantity);
-//				json.put("status", Strstatus);
-//				json.put("barcode", date);
-//				json.put("create_time", Strcreate_time);
-//				json.put("code_voucher", Strcode_voucher);
+				json.put("product_name", Strproduct_name);
+				json.put("quantity", Strquantity);
+				json.put("status", Strstatus);
+				//json.put("barcode", date);		// barcode
+				json.put("barcode", "");	
+				json.put("create_time", Strcreate_time);
+				json.put("code_voucher", Strcode_voucher);
 				
 				
 				
@@ -208,7 +205,8 @@ public class AddVoucher extends Activity {
 			return null;
 		}
 
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(String result) 
+		{
 			// TODO Auto-generated method stub
 			progress.dismiss();
 			Intent intent = new Intent(AddVoucher.this, ListVoucher.class);
@@ -216,7 +214,8 @@ public class AddVoucher extends Activity {
 		}
 
 		@Override
-		protected void onPreExecute() {
+		protected void onPreExecute() 
+		{
 			// TODO Auto-generated method stub
 			super.onPreExecute();
 			progress = new ProgressDialog(AddVoucher.this);
@@ -227,6 +226,8 @@ public class AddVoucher extends Activity {
 		}
 	}
 
+	
+	
 	// --------------------------Get codevoucher from server
 	// --------------------
 	class WSGetAllProduct extends AsyncTask<String, String, String> {
@@ -297,6 +298,8 @@ public class AddVoucher extends Activity {
 		}
 	}
 
+	
+	
 	// -------------------Getmax id ----------------
 	class WSGetMaxid extends AsyncTask<String, String, String> {
 		

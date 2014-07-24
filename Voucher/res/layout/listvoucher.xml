@@ -11,11 +11,20 @@
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:weightSum="6" >
-
+        android:weightSum="8" >
+		
+        <ImageButton
+            android:id="@+id/listvoucher_btnBack"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/layoutlist"
+            android:src="@drawable/home" />
+        
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_weight="4"
             android:text="INVOICE"
@@ -25,20 +34,29 @@
 
         <ImageButton
             android:id="@+id/MainIbRefresh"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/layoutlist"
             android:src="@drawable/refresh" />
 
         <ImageButton
             android:id="@+id/MainIbAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@drawable/layoutlist"
             android:src="@drawable/plus" />
+        
+        <ImageButton
+            android:id="@+id/MainDelete"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/layoutlist"
+            android:src="@drawable/close_delete" />
     </LinearLayout>
 
     <ListView
