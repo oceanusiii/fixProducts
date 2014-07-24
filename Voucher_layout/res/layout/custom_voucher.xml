@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/mborder_green"
+    android:orientation="horizontal" 
+    android:weightSum="10">
+
+    <TextView
+        android:id="@+id/tvId"
+        android:layout_width="0dp"
+        android:layout_height="41dp"
+        android:layout_weight="2" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="41dp"
+        android:layout_weight="2"
+        android:src="@drawable/producticon" 
+        
+        />
+	<TextView 
+	    android:id="@+id/customvoucher"
+	    android:layout_width="0dp"
+	    android:layout_height="wrap_content"
+	    android:text="Go vao day "   
+	    android:textColor="#1F88DF"
+	    android:layout_weight="4"
+	    />
+	<CheckBox 
+	    android:id="@+id/checkBox1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="2"
+	    android:focusable="false" />
+</LinearLayout>
