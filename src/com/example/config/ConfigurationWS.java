@@ -27,7 +27,8 @@ public class ConfigurationWS {
 	int TIMEOUT_MILLISEC = 30000;		// 10000
 	Context context;
 
-	public ConfigurationWS(Context context) {
+	public ConfigurationWS(Context context) 
+	{
 		this.context = context;
 	}
 	
@@ -38,13 +39,12 @@ public class ConfigurationWS {
 	// get value JSON <String>
 	// convert value to JsonArray
 	//
-	public JSONArray connectWSPut_Get_Data(String url, JSONObject json, String jsonName) {
+	public JSONArray connectWSPut_Get_Data(String url, JSONObject json, String jsonName) 
+	{
 		
 		JSONArray jarr = null;
-		try {
-			
-			
-			
+		try 
+		{
 			// cach khac de thay vao entity __________________________________
 			StringEntity se = new StringEntity(json.toString(), "UTF-8");
 			InputStreamEntity ise = new InputStreamEntity(new ByteArrayInputStream(json.toString().getBytes("UTF-8")), -1);

@@ -2,24 +2,21 @@ package com.example.voucher;
 
 import java.util.ArrayList;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -27,15 +24,21 @@ import android.widget.TextView;
 
 import com.example.config.ConfigurationWS;
 import com.exemple.model.Product;
-import com.exemple.model.Voucher;
 
-public class ListVoucher extends Activity {
+
+
+public class ListVoucher extends Activity 
+{
 	
 	
 	ArrayList<Product> myArrayList = new ArrayList<Product>();
 	ListView myListView;
 	CustomAdapter myCustomAdapter;
 	Bundle bundlerefrest;
+	boolean flag_loading = false;
+	int item;
+	int numberItem;
+	int maxItem;
 	// private static final String url =
 	// "http://192.168.1.101:81/WSERP/get_all_products.php";
 	// private static final String url =
@@ -52,6 +55,14 @@ public class ListVoucher extends Activity {
 		super.onCreate(savedInstanceState);
 		bundlerefrest = savedInstanceState;
 		setContentView(R.layout.listvoucher);
+		
+		
+		item = 10;
+		numberItem = 0;
+		maxItem = 1;
+		
+		
+		
 		/*--------------------policy for connect to ws-------------*/
 		final ListView myListView = (ListView) findViewById(R.id.MainListvoucher);
 		myCustomAdapter = new CustomAdapter(ListVoucher.this, R.layout.listvoucher, myArrayList);
@@ -67,12 +78,16 @@ public class ListVoucher extends Activity {
 		
 		
 		// button REFRESH onClick
-		refreshButton.setOnClickListener(new OnClickListener() {
+		refreshButton.setOnClickListener(new OnClickListener() 
+		{
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View arg0) 
+			{
 				// TODO Auto-generated method stub
-				myArrayList.clear();
-				new WSGetAllProduct(ListVoucher.this).execute();
+				//myArrayList.clear();
+				//new WSGetAllProduct(ListVoucher.this).execute();
+				if(!flag_loading) flag_loading = true;
+				new TaskLoadMore(ListVoucher.this).execute(item);
 			}
 		});
 		
@@ -168,17 +183,58 @@ public class ListVoucher extends Activity {
 				startActivityForResult(intent, 1);
 			}
 		});
+	
+	
+	
+		// load more
+		myListView.setOnScrollListener(new OnScrollListener()
+		{
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+									int visibleItemCount, int totalItemCount)
+			{
+				// TODO Auto-generated method stub
+				//Log.e("TaskLoadMore", (firstVisibleItem + visibleItemCount)+"");
+				if(firstVisibleItem + visibleItemCount == totalItemCount &&
+															totalItemCount != 0)
+				{
+					// if numberItem == maxItem
+					// have no item for load
+					if(!flag_loading && numberItem < maxItem)
+					{
+						flag_loading = true;
+						numberItem = maxItem;
+						// call task load more items
+						item+=10;
+						new TaskLoadMore(ListVoucher.this).execute(item);
+					}
+				}
+			}
+		});
+		
+	
 	}
 
 	
 	
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		
-		// when back ifselt from another activity
+		// when back from another activity
 		// reset list of products
 		myArrayList.clear();
-		new WSGetAllProduct(ListVoucher.this).execute();
+		//new WSGetAllProduct(ListVoucher.this).execute();
+		flag_loading = true;
+		new TaskLoadMore(ListVoucher.this).execute(10);
 		super.onResume();
 	}
 	
@@ -220,7 +276,8 @@ public class ListVoucher extends Activity {
 				arrItem = mWS.connectWSPut_Get_Data(url, json, "voucher");
 				
 				
-				if (arrItem != null) {
+				if (arrItem != null) 
+				{
 					
 					for (int i = 0; i < arrItem.length(); i++) 
 					{
@@ -350,5 +407,115 @@ public class ListVoucher extends Activity {
 
 	}
 
+	
+	
+	
+	
+	class TaskLoadMore extends AsyncTask<Integer, String, String>
+	{
+		
+		private String urlLoadMore = "http://117.6.131.222:6789/erpws/get_limit_products.php";
+		private ConfigurationWS ws;
+		private ProgressDialog progressDialog;
+		
+		
+		
+		public TaskLoadMore(Context c)
+		{
+			ws = new ConfigurationWS(c);
+			progressDialog = new ProgressDialog(c);
+		}
+		
+		
+		
+		@Override
+		protected String doInBackground(Integer... params)
+		{
+			// TODO Auto-generated method stub
+			
+			int n = params[0];
+			
+			if(flag_loading)
+			{
+				try
+				{
+					JSONObject json = new JSONObject();
+					json.put("top", String.valueOf(n));
+					JSONArray arr = ws.connectWSPut_Get_Data(urlLoadMore, json, "voucher");
+					
+					if (arr != null) 
+					{
+						maxItem = arr.length();
+						
+						for (int i = 0; i < arr.length(); i++) 
+						{
+							JSONObject results = arr.getJSONObject(i);
+	
+							Product p = new Product();
+							// no value for `id`, did it mean `_id`?
+							//voucher.setId(results.getString("id"));
+							p.setId(results.getString("_id"));
+							p.setProduct_Name(results.getString("product_name"));
+							p.setQuantity(results.getString("quantity"));
+							p.setStatus(results.getString("status"));
+							p.setBarcode(results.getString("barcode"));
+							// don't have `code_voucher` in result
+							//voucher.setCode_voucher(results.getString("code_voucher"));
+							p.setCode_id(results.getString("code_id"));
+							// and don't have `create_time` in result too
+							//voucher.setCreate_time(results.getString("create_time"));	// it mean is `create_date` ?
+							p.setCreate_date(results.getString("create_date"));
+							
+							myArrayList.add(p);
+						}
+					}
+				}
+				catch (JSONException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			return null;
+		}
 
+		
+		
+		@Override
+		protected void onPreExecute()
+		{
+			// TODO Auto-generated method stub
+			// clean all item in list
+			myArrayList.clear();
+			
+			progressDialog.setMessage("Loading data...");
+			progressDialog.setCancelable(false);
+			progressDialog.show();
+			
+			super.onPreExecute();
+		}
+
+		
+		
+		@Override
+		protected void onPostExecute(String result)
+		{
+			// TODO Auto-generated method stub			
+			// end load more
+			flag_loading = false;
+			
+			myCustomAdapter.notifyDataSetChanged();
+			
+			try
+			{
+				progressDialog.dismiss();
+			}
+			catch(Exception e) {}
+			
+			super.onPostExecute(result);
+		}
+		
+		
+	}
 }
